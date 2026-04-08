@@ -12,6 +12,16 @@ public class Monitor
 	 * ------------
 	 */
 
+	// TODO: Task 2: Philosopher states 
+	private static final int THINKING = 0;
+	private static final int HUNGRY   = 1;
+	private static final int EATING   = 2;
+
+	private int[] state;
+	private int   numberOfPhilosophers;
+
+	// TODO: Task 2: Boolean so systeme knows if anyone's tlaking already 
+	private boolean someoneTalking = false;
 
 	/**
 	 * Constructor
@@ -19,6 +29,11 @@ public class Monitor
 	public Monitor(int piNumberOfPhilosophers)
 	{
 		// TODO: set appropriate number of chopsticks based on the # of philosophers
+		// Task 2: initialise one state slot per philosopher; all start THINKING
+		numberOfPhilosophers = piNumberOfPhilosophers;
+		state = new int[numberOfPhilosophers];
+		for (int i = 0; i < numberOfPhilosophers; i++)
+			state[i] = THINKING;
 	}
 
 	/*
@@ -28,12 +43,46 @@ public class Monitor
 	 */
 
 	/**
+	 * Task 2: Internal helper. Lets philosopher piTID eat if both neighbours are not eating and the philosopher itself is HUNGRY.
+	 */
+	private void test(final int piTID)
+	{
+		int i = piTID - 1;   //  start index 0
+		int left  = (i - 1 + numberOfPhilosophers) % numberOfPhilosophers;
+		int right = (i + 1) % numberOfPhilosophers;
+
+		if (state[left] != EATING && state[i] == HUNGRY && state[right] != EATING)
+		{
+			state[i] = EATING;
+			notifyAll();
+		}
+	}
+
+	/**
 	 * Grants request (returns) to eat when both chopsticks/forks are available.
 	 * Else forces the philosopher to wait()
 	 */
 	public synchronized void pickUp(final int piTID)
 	{
-		// ...
+		// Task 2: mark this philosopher as hungry and test whether it can eat
+		int i = piTID - 1;  //  start index 0
+		state[i] = HUNGRY;
+		test(piTID);
+
+		// Task 2: if we still cannot eat, block until notified and re-test
+		while (state[i] != EATING)
+		{
+			try
+			{
+				wait();
+			}
+			catch (InterruptedException e)
+			{
+				System.err.println("Monitor.pickUp():");
+				DiningPhilosophers.reportException(e);
+				System.exit(1);
+			}
+		}
 	}
 
 	/**
@@ -42,7 +91,14 @@ public class Monitor
 	 */
 	public synchronized void putDown(final int piTID)
 	{
-		// ...
+		// Task 2: philosopher is done eating; check if either neighbour can now eat
+		int i     = piTID - 1;
+		int left  = (i - 1 + numberOfPhilosophers) % numberOfPhilosophers;
+		int right = (i + 1) % numberOfPhilosophers;
+
+		state[i] = THINKING;
+		test(left  + 1);   // convert back to 1-based TID for test()
+		test(right + 1);
 	}
 
 	/**
@@ -51,7 +107,21 @@ public class Monitor
 	 */
 	public synchronized void requestTalk()
 	{
-		// ...
+		// Task 2: wait until no other philosopher is talking
+		while (someoneTalking)
+		{
+			try
+			{
+				wait();
+			}
+			catch (InterruptedException e)
+			{
+				System.err.println("Monitor.requestTalk():");
+				DiningPhilosophers.reportException(e);
+				System.exit(1);
+			}
+		}
+		someoneTalking = true;
 	}
 
 	/**
@@ -60,7 +130,9 @@ public class Monitor
 	 */
 	public synchronized void endTalk()
 	{
-		// ...
+		// Task 2: release the talking slot and wake waiting philosophers
+		someoneTalking = false;
+		notifyAll();
 	}
 }
 
