@@ -139,7 +139,9 @@ public class Philosopher extends BaseThread
 			"No!! I'm with the science team! What are you DOING Gordon?",
 			"I don't care WHO the professor sends. I'm NOT doing my theory assignments!",
 			"I really think I'd have better odds at a fulfilling career as a soundcloud rapper. I mean, just think about it. That's what we do right? We da thinkers fr fr. So yeah I just released my latest single yesterday and I would really appreciate it if you all gave it a listen. Actually, why don't we just listen to it right now! Oh, the speaker's aren't working? That's ok! I can do it accapella.",
-			"I really think that the reason Stevie Wonder struggled to concretize his sound in his earlier career was due to the constraints imposed on him by his record label. I mean, they were really trying to capitalize from the profitability of hit singles in the music industry at the time, but quickly slapping together second-rate songs to pad out an entire album and using that to repackage one popular song really isn't a sustainable practice. It's no Wonder Stevie had so much leverage with his contract when he turned 21. For years that label had been the one thing keeping him from truly fleshing out a complete album, where he could experiment with his sound on his own terms."
+			"I really think that the reason Stevie Wonder struggled to concretize his sound in his earlier career was due to the constraints imposed on him by his record label. I mean, they were really trying to capitalize from the profitability of hit singles in the music industry at the time, but quickly slapping together second-rate songs to pad out an entire album and using that to repackage one popular song really isn't a sustainable practice. It's no Wonder Stevie had so much leverage with his contract when he turned 21. For years that label had been the one thing keeping him from truly fleshing out a complete album, where he could experiment with his sound on his own terms.",
+			"*BURRRRRRRRRRP*\n Excuse me ... Thanks you a real one.",
+			"To the one who just burped, or who is about to burp, or who may never burp at all, you are excused."
 		};
 
 		System.out.println
