@@ -12,15 +12,16 @@ public class Monitor
 	 * ------------
 	 */
 
-	// TODO: Task 2: Philosopher states 
+	// Task 2: Philosopher states 
 	private static final int THINKING = 0;
 	private static final int HUNGRY   = 1;
 	private static final int EATING   = 2;
+	private static final int TALKING  = 3;
 
 	private int[] state;
 	private int   numberOfPhilosophers;
 
-	// TODO: Task 2: Boolean so systeme knows if anyone's tlaking already 
+	// Task 2: Boolean so systeme knows if anyone's tlaking already 
 	private boolean someoneTalking = false;
 
 	/**
@@ -28,7 +29,6 @@ public class Monitor
 	 */
 	public Monitor(int piNumberOfPhilosophers)
 	{
-		// TODO: set appropriate number of chopsticks based on the # of philosophers
 		// Task 2: initialise one state slot per philosopher; all start THINKING
 		numberOfPhilosophers = piNumberOfPhilosophers;
 		state = new int[numberOfPhilosophers];
@@ -53,6 +53,7 @@ public class Monitor
 
 		if (state[left] != EATING && state[i] == HUNGRY && state[right] != EATING)
 		{
+			
 			state[i] = EATING;
 			notifyAll();
 		}
@@ -70,7 +71,7 @@ public class Monitor
 		test(piTID);
 
 		// Task 2: if we still cannot eat, block until notified and re-test
-		while (state[i] != EATING)
+		while (state[i] != EATING && state[i] != TALKING)
 		{
 			try
 			{
@@ -105,7 +106,7 @@ public class Monitor
 	 * Only one philopher at a time is allowed to philosophy
 	 * (while she is not eating).
 	 */
-	public synchronized void requestTalk()
+	public synchronized void requestTalk(final int piTID)
 	{
 		// Task 2: wait until no other philosopher is talking
 		while (someoneTalking)
@@ -121,16 +122,21 @@ public class Monitor
 				System.exit(1);
 			}
 		}
+		int i = piTID - 1;
+		state[i] = TALKING;
 		someoneTalking = true;
+		notifyAll();
 	}
 
 	/**
 	 * When one philosopher is done talking stuff, others
 	 * can feel free to start talking.
 	 */
-	public synchronized void endTalk()
+	public synchronized void endTalk(final int piTID)
 	{
 		// Task 2: release the talking slot and wake waiting philosophers
+		int i = piTID - 1;	
+		state[i] = THINKING;
 		someoneTalking = false;
 		notifyAll();
 	}

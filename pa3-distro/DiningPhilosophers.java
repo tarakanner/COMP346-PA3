@@ -1,3 +1,5 @@
+import java.util.InputMismatchException;
+
 /**
  * Class DiningPhilosophers
  * The main starter.
@@ -42,11 +44,21 @@ public class DiningPhilosophers
 		try
 		{
 			/*
-			 * TODO:
 			 * Should be settable from the command line
 			 * or the default if no arguments supplied.
 			 */
 			int iPhilosophers = DEFAULT_NUMBER_OF_PHILOSOPHERS;
+			if (argv.length > 0 && argv[0].length() > 0) {
+				try {
+					iPhilosophers = Integer.parseInt(argv[0]);
+					if (iPhilosophers <= 0) {
+						throw new InputMismatchException();
+					}
+				} catch (Exception e) {
+					System.out.println(String.format("% is not a positive decimal integer", argv[0]) + "\n");
+					System.out.println("Usage: java DiningPhilosophers [NUMBER_OF_PHILOSOPHERS]");
+				}
+			}
 
 			// Make the monitor aware of how many philosophers there are
 			soMonitor = new Monitor(iPhilosophers);
