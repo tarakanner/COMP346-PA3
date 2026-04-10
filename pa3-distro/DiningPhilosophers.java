@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.InputMismatchException;
 
 /**
@@ -60,6 +64,11 @@ public class DiningPhilosophers
 				}
 			}
 
+			// Set output stream to file
+			FileOutputStream fOutputStream = new FileOutputStream(new File(String.format("Test Cases/gmake_regression_test_%d_philosophers.txt", iPhilosophers)));
+            PrintStream printStream = new PrintStream(fOutputStream, true);
+            System.setOut(printStream);
+
 			// Make the monitor aware of how many philosophers there are
 			soMonitor = new Monitor(iPhilosophers);
 
@@ -91,7 +100,9 @@ public class DiningPhilosophers
 			System.err.println("main():");
 			reportException(e);
 			System.exit(1);
-		}
+		} catch (FileNotFoundException e) {
+             System.err.println(e.getMessage());
+        }
 	} // main()
 
 	/**

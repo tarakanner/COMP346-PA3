@@ -24,7 +24,7 @@ run: all
 	$(JVM) $(EXE)
 
 regression: all
-	@for arg in 1 2 3 4 5; do $(JVM) $(EXE) $$arg; done
+	@for arg in 1 2 3 4 500; do $(JVM) $(EXE) $$arg; done
 
 clean:
 	rm -f $(CLASSES) #* *~
